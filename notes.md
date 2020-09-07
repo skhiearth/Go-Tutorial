@@ -417,3 +417,166 @@ func main() {
 
 Operations that can be determined at compile time are allowed: Arithmetic, Bitwise and Bitshifting
 
+## Arrays and Slices
+
+### Arrays
+
+Array members are contiguous in memory. It's very fast in terms of execution. All members must have same data type, and length of an array must be specified explicity at compile time.
+
+#### Creation of Array
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    grades := [...]int{97, 98, 99} // Create an array just large enough to contain the literals
+    var students [3]string // Empty array of length 3
+    students[0] = "foo" // Specify value at 0 index
+    students[1] = "bar"
+    students[2] = "foobar"
+    fmt.Printf("Grades: %v", grades)
+    fmt.Printf("Student1: %v", students[1]) // Dereferencing
+}
+```
+
+#### Built-in Array functions
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    var students [5]string
+    students[0] = "foo"
+    students[1] = "bar"
+    students[2] = "foobar"
+    fmt.Printf("No. of Students: %v", len(students)) // Length of Array
+
+    var identityMatrix [3][3]int = [3][3]int{[3]int{1,0,0}, [3]int{0,1,0}, [3]int{0,0,1}} // Identity Matrix
+    fmt.Println(identityMatrix)
+}
+```
+
+#### Working with Arrays
+
+In Go, Arrays are actually considered values itself. In most other languages, arrays actually point to the values, but in Go, copying a Array creates a literal copy.
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    a := [...]int{1,2,3}
+    b := a // Creates a literal copy of a - Slow for large arrays
+    b[1] = 5
+    fmt.Println(a)
+    fmt.Println(b)
+}
+```
+
+### Slices
+
+Everything we can do with an array, we can do with a Slice as well, with a few exceptions.
+
+#### Creation of Slices
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    a := []int{1,2,3} // Declaration
+    fmt.Println(a)
+}
+```
+
+#### Built-in Slice functions
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    a := []int{1,2,3} // Declaration
+    fmt.Println("%v", len(a)) // Length
+    fmt.Println("%v", cap(a)) // Capacity
+}
+```
+
+#### Working with Slices
+
+Unlike arrays, slices are reference-types, i.e., they refer to the same underlying data.
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    a := []int{1,2,3}
+    b := a // Reference to the same data
+    b[1] = 5
+    fmt.Println(a)
+    fmt.Println(b)
+
+    bigSlice := []int{1,2,3,4,5,6,7,8,9,10}
+    b := bigSlice[:] // Slice of all elements
+    b := bigSlice[3:] // Slice from 4th element to end
+    b := bigSlice[:6] // Slice first 6 elements
+    b := bigSlice[3:6] // Slice the 4th, 5th and 6th elements
+
+    //Slicing operations can work with Arrays too
+}
+```
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    a := make([]int, 3, 100) // Slide Declaration -> int is the data type, 3 is the length of the slice, 100 is the capacity -> for e.g., Slices don't need to have a fixed element in their lifetime. We use this method of declaration to specifically state the maximum capacity of the underlying array to save time due to limited copying of array.
+    a = append(a, 1) // Adds 1 to the end of the zero elements.
+    a = append(a, []int{2, 3, 4, 5}...) // Spread Operator to add slide to the end of a slice
+    fmt.Println(a)
+}
+```
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    a := []int{1,2,3,4,5}
+    b := append(a[:2], a[3:]...) // slicing from the middle of a slice
+}
+```
+
+## Maps and Structs
+
+### Maps
+
+### Structs
