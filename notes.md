@@ -1035,3 +1035,111 @@ func main() {
     }
 }
 ```
+
+## Control Flow: Looping
+
+### For Statements
+
+#### Simple Loops
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    for i:=0;i<5;i++{
+        fmt.Println(i)
+    }
+}
+```
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    for i, j:=0, 0; i<5; i, j = i+1, j+1 {
+        fmt.Println(i)
+    }
+}
+```
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    i := 0
+    for { // Infinite for loop
+        fmt.Println(i)
+        i++
+    }
+}
+```
+
+#### Exiting early
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    i := 0
+    for { // Infinite for loop
+        fmt.Println(i)
+        i++
+        if i == 5 {
+            break // exit loop
+        }
+    }
+}
+```
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    i := 0
+    for { // Infinite for loop
+        if i % 2 == 0 {
+            continue // next iteration -> prints odd numbers
+        }
+        fmt.Println(i)
+    }
+}
+```
+
+#### Looping through collections
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    s := []int{1,2,3}
+    for k, v := range s { // look at collection -> take each value at a time and gives key and value -> Works for arrays, slices, maps and strings
+        fmt.Println(k, v)
+    }
+}
+```
+
+## Control Flow: Defer, Panic and Recover
