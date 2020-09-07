@@ -579,4 +579,227 @@ func main() {
 
 ### Maps
 
+#### What are maps
+
+Maps take a map key and map them over to some kind of a value.
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    statePop := map[string]int{
+        "California": 1111,
+        "New York": 2222,
+        "Ohio": 3333,
+    }
+    fmt.Println(statePop)
+}
+```
+
+#### Creating Maps
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    statePopMake := make(map[string]int) // Make Method
+    statePopMake = map[string]int{
+        "California": 1111,
+        "New York": 2222,
+        "Ohio": 3333,
+    }
+
+    statePop := map[string]int{
+        "California": 1111,
+        "New York": 2222,
+        "Ohio": 3333,
+    } // Literal Syntax
+    fmt.Println(statePop)
+}
+```
+
+#### Manipulation
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    statePopMake := make(map[string]int) // Make Method
+    statePopMake = map[string]int{
+        "California": 1111,
+        "New York": 2222,
+        "Ohio": 3333,
+    }
+    statePopMake["Georgia"] = 4444 // adding a key-value pair
+    fmt.Println(statePopMake["Ohio"]) // Interrogating one pair
+    delete(statePopMake, "Georgia") // deleting a key-value pair -> Expecting the value of this deleted key would now return a value of 0. To verify if a key actually exists in a map or not, we use the comma ok syntax
+    pop, ok := statePopulation["Georgia"]
+    fmt.Println(pop, ok) // Returns 0, false
+
+    // Return order of a map isn't guaranteed
+
+    fmt.Println(len(statePopulations))
+
+    // Maps are also reference types like slices, i.e., manipulating map in one place is going to affect every other place where the map resides in.
+}
+```
+
 ### Structs
+
+#### What are structs
+
+A struct type gathers related information together in a very flexible way.
+
+#### Creating Structs
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+type Doctor struct {
+    number int
+    actorName string
+    companions []string
+} // Struct
+
+func main() {
+    aDoctor := Doctor {
+        number: 3,
+        actorName: "aAA",
+        companions: []string {
+            "aasdfas",
+            "asdfasdf",
+        },
+    } // Field Name Syntax
+
+    fmt.Println(aDoctor.number) // Drilling down on a struct using dot notation
+    fmt.Println(aDoctor.companions[1])
+
+    bDoctor := Doctor {
+        3,
+        "bBB",
+        []string {
+            "aa",
+            "bb",
+        },
+    } // Positional Syntax -> Not Recommended
+}
+```
+
+#### Naming conventions for Structs
+
+```go
+type Doctor struct { // global struct
+    number int
+    actorName string
+    companions []string // local constituents
+} // Struct
+```
+
+```go
+type doctor struct { // local struct
+    number int
+    actorName string
+    companions []string // local constituents
+} // Struct
+```
+
+```go
+type Doctor struct { // global struct
+    Number int
+    ActorName string
+    Companions []string // global constituents
+} // Struct
+```
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    aDoctor := struct{name string}{name: "foo"} // Anonymous struct
+    anotherDoctor := aDoctor
+    anotherDoctor.name = "bar"
+}
+```
+
+#### Embedding
+
+Instead of inheritance model, Go uses a composition model to establish a has-a relationship instead of an is-a relationship.
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+type Animal struct {
+    Name string
+    Origin string
+}
+
+type Bird struct {
+    Animal // Embedding
+    SpeedKPH float32
+    CanFly bool
+}
+
+func main() {
+    b := Bird{}
+    b.Name = "Emu"
+    b.Origin = "Australia"
+    b.SpeedKPH = 48
+    b.CanFly = false
+    fmt.Println(b.Name)
+
+    c := Bird{
+        Animal: Animal{Name: "Emu", Origin: "Australia"},
+        SpeedKPH: 48,
+        CanFly: false,
+    } // Explicitly have to talk about internal structure in case of literal syntax
+    fmt.Println(c.Name)
+}
+```
+
+#### Tags
+
+Provide a string of text for description, can also be used externally by custom code for validation etc.
+
+```go
+package main
+
+import (
+    "fmt"
+    "reflect" // for tags
+)
+
+type Animal struct {
+    Name string `required max:"100"` // Tags -> It doesn't make any effect to the struct, it's like a comment, but we can fetch this and use custom code for user-defined purposes.
+    Origin string
+}
+
+func main() {
+    t := reflect.TypeOf(Animal{})
+    field, _ = t.FieldByName("Name")
+    fmt.Println("")
+}
+```
