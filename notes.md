@@ -1774,3 +1774,132 @@ When creating a goroutine, know how it will end to avoid subtle memory leaks.
 Check for race conditions at race time.
 
 ## Channels
+
+### Channel basics
+
+```go
+package main
+
+import (
+    "fmt"
+    "sync"
+    "time"
+)
+
+var wg = sync.WaitGroup{}
+
+func main() {
+    ch := make(chan int)
+    wg.Add(2)
+
+    go func() { // Recieving goroutine
+        i := <- ch
+        fmt.Println(i)
+        wg.Done()
+    }()
+
+    go func() { // Sending goroutine
+        ch <- 42
+        wg.Done()
+    }()
+
+    wg.Wait()
+}
+```
+
+### Restricting data flow
+
+```go
+package main
+
+import (
+    "fmt"
+    "sync"
+)
+
+var wg = sync.WaitGroup{}
+
+func main() {
+    ch := make(chan int)
+    wg.Add(2)
+
+    go func(ch <- chan int) { // Recieving only channel
+        i := <- ch
+        fmt.Println(i)
+        wg.Done()
+    }(ch)
+
+    go func(go chan<- int) { // Sending only goroutine
+        ch <- 42
+        wg.Done()
+    }(ch)
+
+    wg.Wait()
+}
+```
+
+### Buffered channels
+
+```go
+package main
+
+import (
+    "fmt"
+    "sync"
+)
+
+var wg = sync.WaitGroup{}
+
+func main() {
+    ch := make(chan int, 50) // Internal data store
+    wg.Add(2)
+
+    go func(ch <- chan int) { // Recieving only channel
+        i := <- ch
+        fmt.Println(i)
+        wg.Done()
+    }(ch)
+
+    go func(go chan<- int) { // Sending only goroutine
+        ch <- 42
+        ch <- 27 // extra var goes to buffer
+        wg.Done()
+    }(ch)
+
+    wg.Wait()
+}
+```
+
+### Closing channels
+
+```go
+package main
+
+import (
+    "fmt"
+    "sync"
+)
+
+var wg = sync.WaitGroup{}
+
+func main() {
+    ch := make(chan int, 50) // Internal data store
+    wg.Add(2)
+
+    go func(ch <- chan int) { // Recieving only channel
+        for i := range <- ch {
+            fmt.Println(i)
+        }
+        wg.Done()
+    }(ch)
+
+    go func(go chan<- int) { // Sending only goroutine
+        ch <- 42
+        ch <- 27 
+        close(ch) // For loop sees channel is closed, for loop detects it and then wg.Done() is triggered
+        wg.Done()
+    }(ch)
+
+    wg.Wait()
+}
+```
