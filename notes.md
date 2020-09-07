@@ -803,3 +803,235 @@ func main() {
     fmt.Println("")
 }
 ```
+
+## Control Flow: If and Switch statements
+
+### If statements
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    if true { // Boolean Test
+        fmt.Println("This will be printed")
+    }
+
+    if false {
+        fmt.Println("This will not be printed")
+    }
+
+    statePopulations := map[string]int{
+        "California": 111,
+        "New York": 222
+    }
+
+    if pop, ok := statePopulations["Florida"]; ok { // Execute if Florida exists
+        fmt.Println(pop)
+    }
+}
+```
+
+#### Operators
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    number:=50
+    guess:=50
+
+    if guess < 1 || guess > 100 { //OR
+        fmt.Println("The guess must be between 1 and 100!")
+    }
+
+    if guess >=1 && guess <= 100 { // AND
+        if guess < number {
+            fmt.Println("Too low")
+        }
+        if guess > number {
+            fmt.Println("Too high")
+        }
+        if guess == number {
+            fmt.Println("Got it")
+        }
+        fmt.Println(number<=guess, number>=guess, number!=guess)
+    }
+    fmt.Println(!true) // NOT -> prints false
+}
+```
+
+#### If-else and if-else if statements
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    number:=50
+    guess:=50
+
+    if guess < 1 {
+        fmt.Println("The guess must be more than 1!")
+    } else if guess > 100 {
+        fmt.Println("The guess must be less than 100!")
+    } else {
+        if guess < number {
+            fmt.Println("Too low")
+        }
+        if guess > number {
+            fmt.Println("Too high")
+        }
+        if guess == number {
+            fmt.Println("Got it")
+        }
+        fmt.Println(number<=guess, number>=guess, number!=guess)
+    }
+    fmt.Println(!true) // NOT -> prints false
+}
+```
+
+### Switch statements
+
+#### Simple cases
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    switch 2 { // 2 is a tag -> comparing everything against this
+        case 1: // 1 == 2?
+            fmt.Println("one")
+        case 2: // 2 == 2?
+            fmt.Println("two")
+        default: // if none of the cases pass
+            fmt.Println("not one or two")
+    }
+}
+```
+
+#### Cases with multiple tests
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    switch 2 { // 2 is a tag -> comparing everything against this
+        case 1, 5, 10:
+            fmt.Println("one, five OR ten")
+        case 2, 4, 6:
+            fmt.Println("two, four OR six")
+        default: // if none of the cases pass
+            fmt.Println("some other number")
+
+        //NOTE: test cases need to be unique
+        //NOTE: break is implicit
+    }
+}
+```
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    switch i:= 2+3; i { // comparing against i
+        case 1, 5, 10:
+            fmt.Println("one, five OR ten")
+        case 2, 4, 6:
+            fmt.Println("two, four OR six")
+        default: // if none of the cases pass
+            fmt.Println("some other number")
+    }
+}
+```
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    i := 10
+    switch { // tagless syntax
+        case i <= 10:
+            fmt.Println("less than equal to 10")
+        case i <= 20:
+            fmt.Println("less than equal to 20")
+        default: // if none of the cases pass
+            fmt.Println("greater than 20")
+    } // Overlapping allowed
+}
+```
+
+#### Falling through
+
+Break is implictic, to add fall through;
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    i := 10
+    switch {
+        case i <= 10:
+            fmt.Println("less than equal to 10")
+            fallthrough // next case is also executed instead of logic
+        case i <= 20:
+            fmt.Println("less than equal to 20")
+        default: // if none of the cases pass
+            fmt.Println("greater than 20")
+    }
+}
+```
+
+#### Type switches
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    var i interface{} = 1
+    switch i.type() {
+        case int:
+            fmt.Println("int")
+        case float64:
+            fmt.Println("float64")
+        case string:
+            fmt.Println("string")
+        default:
+            fmt.Println("another type")
+    }
+}
+```
