@@ -1143,3 +1143,181 @@ func main() {
 ```
 
 ## Control Flow: Defer, Panic and Recover
+
+### Defer
+
+In go, the `defer` keyword actually executes any functions passed into it after the function finishes it final statement but before it actually returns. Defered functions are executed in LIFO (Last in, first out) order. **The arguments are taken at the time of deferral and not at the time of calling.**
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    fmt.Println("start")
+    defer fmt.Println("middle")
+    fmt.Println("end") // end is printed before middle
+    // The main looks for any defer functions here
+}
+```
+
+### Panic
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    a, b := 1,0
+    ans := a/b // Exception -> Called panic in GO
+    panic("something bad happened") // Custom panic
+    fmt.Println(ans)
+}
+```
+
+Deffered calls are handled after panic.
+
+### Recover
+
+Recover from panics, only useful in deferred functions because they are handled after panic. Current function will not attempt to continue, but higher functions will continue.
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+)
+
+func main() {
+    fmt.Println("start")
+    defer func() {
+        if err := recover(); err != nil {
+            log.Println(err)
+        }
+    }()
+    panic("something bad happened")
+    fmt.Println("end")
+}
+```
+
+## Pointers
+
+### Creating pointers
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    a := 42
+    b := a // copy data from data and assign to b
+    fmt.Println(a, b) // Prints 42, 42
+    a = 27 // A changes but b remains the same
+}
+```
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    var a int = 42
+    var b *int = &a // Pointer (*)b points to address of (&)a
+    fmt.Println(a, b) // Prints a and address of a
+    a = 27 // both a and b changed to 27
+}
+```
+
+### Dereferencing pointers
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    var a int = 42
+    var b *int = &a
+    fmt.Println(a, *b) // Dereferencing pointers -> prints value stores in that memory location
+    *b = 14 // both a and b changed
+}
+```
+
+### The `new` function
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    var ms *myStruct
+    ms = new(myStruct)
+    fmt.Println(ms)
+}
+
+type myStruct struct {
+    foo int
+}
+```
+
+### Working with `nil`
+
+Used to create pointers to objects
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    var ms *myStruct // Zero value of pointer is nil
+    ms = new(myStruct)
+    (*ms).foo = 42
+    fmt.Println((*ms).foo)
+}
+
+type myStruct struct {
+    foo int
+}
+```
+
+### Types with internal pointers
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    a := []int{1,2,3} // Internal projection of slice has a pointer to the underlying array
+    b := a
+    fmt.Println(a, b)
+    a[1] = 42
+    fmt.Println(a, b)
+
+    // Maps also have internal pointers
+}
+```
+
+## Functions
