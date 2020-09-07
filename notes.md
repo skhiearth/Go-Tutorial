@@ -199,3 +199,152 @@ func main() {
     fmt.Println(j)
 }
 ```
+
+## Primitives
+
+### Boolean type
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    var n bool = true
+    fmt.Printf("%v, %T\n", n, n)
+}
+```
+
+Booleans can be used for state flagging.
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    n := 1 == 1 // check if 1 equals 1
+    fmt.Printf("%v, %T\n", n, n) // generates a boolean
+}
+```
+
+In Go, everytime we init a variable, it has a zero value and the zero value for booleans is false.
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    var n bool
+    fmt.Printf("%v, %T\n", n, n) // generates a boolean
+}
+```
+
+### Numeric types: Integers, floating point and complex numbers
+
+Zero value for all numeric type is zero, or the zero equivalent of that numeric type (e.g., 0.0)
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    n := 42 // Integer (8bit, 16, 32, 64)
+    var m uint16 = 42 // Unsigned Integer (8bit, 16, 32)
+
+    // Arithmetic Operations
+    fmt.Println(a + b) // Addition
+    fmt.Println(a - b) // Subtraction
+    fmt.Println(a * b) // Multiply
+    fmt.Println(a / b) // Divide
+    fmt.Println(a % b) // Modulo Function -> Remainder
+
+    var o int8 = 3
+    var p int = 10
+    z := 2.1e14 // 10^14
+    fmt.Println(p + int(o)) // Type Conversion
+
+    // Bit Operations
+    a := 10
+    b := 3
+    fmt.Println(a & b) // AND
+    fmt.Println(a | b) // OR
+    fmt.Println(a ^ b) // XOR
+    fmt.Println(a &^ b) // ANDNOT
+
+    // Bit Shifting
+    fmt.Println(a << 3) // Bitshift left three places
+    fmt.Println(a >> 3) // Bitshift right three places
+
+    // Complex Numbers
+    var com complex64 = 1 + 2i
+    fmt.Printf("%v, %T\n", com, com)
+    real(n) // Real part
+    imag(n) // Imaginary part
+
+    var com2 complex128 = complex(5, 12) // Another way of declaring complex number
+}
+```
+
+### Text Types
+
+A string in Go is any UTF8 character. This makes them very powerful, but as a result, they can't encode every character.
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    s := "this is a string
+    fmt.Printf("%v, %T\n", string(s[2]), s[2]) // slicing the 3rd element in the string - strings in go are actually treated as bytes
+
+    s[2] = "u" // compile-time error
+
+    s2 := "add"
+    fmt.Printf("%v, %T\n", s+s2, s+s2) // String Concatenation
+
+    by := []byte(s) // Corresponding UTF values of every element in the String as an array - used for functions as a lot of function in Go work with Byte slices
+}
+```
+
+A rune represented UTF32 characters. Any UTF32 character can be upto 32 bits long, but it does NOT have to be that long. Normally, special methods are required to process runes.
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    var r rune = 'a' // Single quotes
+    fmt.Printf("%v, %T\n", r, r)
+
+    // Runes are a true-type alias of int32
+}
+```
+
+## Constants
+
+### Naming Convention
+
+### Typed Constants
+
+### Untype Constants
+
+### Enumerated Constants
+
+### Enumeration Expressions
