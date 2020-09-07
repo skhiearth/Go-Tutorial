@@ -34,7 +34,7 @@ func main() { // main function - entry point
 
 ## Setting up a Developer Enviornment
 
-![Download Go Binary](https://golang.org/dl/)
+[Download Go Binary](https://golang.org/dl/)
 
 Download GoLand from JetBrains
 
