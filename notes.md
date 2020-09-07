@@ -1659,10 +1659,34 @@ package main
 
 import (
     "fmt"
+    "time"
 )
 
 func main() {
-    go sayHello() // to spin off a green thread and run the function in that thread
+    go sayHello() // to spin off a green thread and run the function in that thread 
+    time.Sleep(100 * time.Millisecond) // to ensure the goroutine invokes a function
+}
+
+func sayHello(){
+    fmt.Println("Hello")
+}
+```
+
+```go
+package main
+
+import (
+    "fmt"
+    "time"
+)
+
+func main() {
+    var msg = "Hello"
+    go func(msg string){
+        fmt.Println(msg)
+    }(msg)
+    msg = "Goodbye"
+    time.sleep(100 * time.Millisecond)
 }
 
 func sayHello(){
@@ -1674,8 +1698,79 @@ func sayHello(){
 
 #### WaitGroups
 
-### Mutexes
+```go
+package main
 
-### Parallelism
+import (
+    "fmt"
+    "sync"
+    "time"
+)
+
+var wg = sync.WaitGroup{}
+
+func main() {
+    var msg = "Hello"
+    wg.Add(1) // Add one thread
+    go func(msg string){
+        fmt.Println(msg)
+        wg.Done() // tell the group that the thread is done
+    }(msg)
+    msg = "Goodbye"
+    wg.Wait()
+}
+
+func sayHello(){
+    fmt.Println("Hello")
+}
+```
+
+#### Mutexes
+
+An lock that the application honors.
+
+```go
+package main
+
+import (
+    "fmt"
+    "sync"
+    "time"
+)
+
+var wg = sync.WaitGroup{}
+counter = 0
+var m = sync.RWMutex{} // infinite readers, only one writer
+
+func main() {
+    runtime.GOMAXPROCS(100) // Threads -> Parallelism
+    for i:=0; i<10;i++{
+        wg.Add(2)
+        m.RLock()
+        go sayHello()
+        m.Lock()
+        go increment()
+    }
+    wg.Wait()
+}
+
+func sayHello(){
+    fmt.Println("Hello #%v", counter)
+    m.RUnlock()
+    wg.Done()
+}
+
+func increment() 
+    counter++
+    m.Unlock()
+    wg.Done()
+}
+```
 
 ### Best practices
+
+Don't create goroutines in libraries.
+When creating a goroutine, know how it will end to avoid subtle memory leaks.
+Check for race conditions at race time.
+
+## Channels
