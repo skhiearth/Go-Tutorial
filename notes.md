@@ -1436,3 +1436,246 @@ func (g greeter) greet() { // Method -> Function executed in known context
 ```
 
 ## Interfaces
+
+### Basics
+
+```go
+package main
+
+import (
+    "fmt"
+    "bytes"
+)
+
+func main() { 
+    var w Writer = ConsoleWriter{}
+    w.Write([]byte("Hello Go!"))
+}
+
+type Writer interface { // Interface -> Describe behavior
+    Write([]byte) (int, error) // Method
+}
+
+type ConsoleWriter struct{} // Implicit type -> to add method to a data type
+
+func (cw ConsoleWriter) Write(data []byte) (int, error) { // Write Method oon Console Writer defined here
+    n, err := fmt.Println(string(data))
+    return n, err
+}
+```
+
+### Composing interfaces
+
+```go
+package main
+
+import (
+    "fmt"
+    "bytes"
+)
+
+func main() { 
+    var wc WriterCloser = NewBufferedWriterCloser()
+    wc.Write([]byte("Hello"))
+    wc.Close()
+}
+
+type Writer interface { 
+    Write([]byte) (int, error)
+}
+
+type Closer interface {
+    Close() error
+}
+
+type WriterCloser interface { // Composing -> embedding interfaces
+    Writer
+    Closer
+}
+
+type BufferedWriterCloser struct {
+    buffer *bytes.Buffer
+}
+
+func (bwc *BufferedWriterCloser) Write(data []byte) (int, error) {
+    n, err := bwc.buffer.Write(data)
+    if err != nil {
+        return 0, err
+    }
+
+    v := make([]byte, 8)
+    for bwc.buffer.Len() > 8 {
+        _, err := bwc.buffer.Read(v)
+        if err != nil {
+            return 0, err
+        }
+        _, err = fmt.Println(string(v))
+        if err != nil {
+            return 0, nil
+        }
+        return n, nil
+    }
+    return n, err
+}
+
+func (bwc *BufferedWriterCloser) Close() error {
+    for bwc.buffer.Len() > 0 {
+        data := bwc.buffer.Next(8)
+        _, err := fmt.Println(string(data))
+        if err != nil {
+            return err
+        }
+    }
+    return nil
+}
+
+func NewBufferedWriterCloser() *BufferedWriterCloser {
+    return &BufferedWriterCloser{
+        buffer: bytes.NewBuffer([].byte()),
+    }
+}
+```
+
+### Type conversion
+
+```go
+package main
+
+import (
+    "fmt"
+    "bytes"
+    "io"
+)
+
+func main() { 
+    var wc WriterCloser = NewBufferedWriterCloser()
+    wc.Write([]byte("Hello"))
+    wc.Close()
+
+    r, ok := wc.(*BufferedWriterCloser)) // type conversion
+    if ok {
+        fmt.Println(r)
+    } else {
+        fmt.println("Conversion failed")
+    }
+}
+
+type Writer interface { 
+    Write([]byte) (int, error)
+}
+
+type Closer interface {
+    Close() error
+}
+
+type WriterCloser interface { 
+    Writer
+    Closer
+}
+
+type BufferedWriterCloser struct {
+    buffer *bytes.Buffer
+}
+
+func (bwc *BufferedWriterCloser) Write(data []byte) (int, error) {
+    n, err := bwc.buffer.Write(data)
+    if err != nil {
+        return 0, err
+    }
+
+    v := make([]byte, 8)
+    for bwc.buffer.Len() > 8 {
+        _, err := bwc.buffer.Read(v)
+        if err != nil {
+            return 0, err
+        }
+        _, err = fmt.Println(string(v))
+        if err != nil {
+            return 0, nil
+        }
+        return n, nil
+    }
+    return n, err
+}
+
+func (bwc *BufferedWriterCloser) Close() error {
+    for bwc.buffer.Len() > 0 {
+        data := bwc.buffer.Next(8)
+        _, err := fmt.Println(string(data))
+        if err != nil {
+            return err
+        }
+    }
+    return nil
+}
+
+func NewBufferedWriterCloser() *BufferedWriterCloser {
+    return &BufferedWriterCloser{
+        buffer: bytes.NewBuffer([].byte()),
+    }
+}
+```
+
+#### The empty interface
+
+Interface that doesn't have any method on it. Anything can be cast onto empty interface.
+
+#### Type switches
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    var i interface{} = 1
+    switch i.type() {
+        case int:
+            fmt.Println("int")
+        case float64:
+            fmt.Println("float64")
+        case string:
+            fmt.Println("string")
+        default:
+            fmt.Println("another type")
+    }
+}
+```
+
+#### Best Practices
+
+Don't export interfaces for types that will be consumed.
+Do export interfaces for types that will be used by package.
+Design functions and methods to receive interfaces whenever possible.
+
+## Goroutines
+
+### Creating goroutines
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    go sayHello() // to spin off a green thread and run the function in that thread
+}
+
+func sayHello(){
+    fmt.Println("Hello")
+}
+```
+
+### Synchronizations
+
+#### WaitGroups
+
+### Mutexes
+
+### Parallelism
+
+### Best practices
