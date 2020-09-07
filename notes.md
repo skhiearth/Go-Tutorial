@@ -341,10 +341,79 @@ func main() {
 
 ### Naming Convention
 
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    const camelCase int = 2 // Internal Constant
+    const CamelCase int = 2 // External Constant
+}
+```
+
 ### Typed Constants
 
-### Untype Constants
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    const camelCase int = 2 // Typed Constant
+}
+```
+
+Constants can be shadowed, like variables.
+
+### Untyped Constants
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    const a = 2 // Untyped Constant
+    var b int16 = 3
+
+    fmt.Printf("%v, %T\n", a+b, a+b) // Implicit conversions are possible with constant because the compiler converts every instance of that constant with the designated type.
+}
+```
 
 ### Enumerated Constants
 
+```go
+package main
+
+import (
+    "fmt"
+)
+
+const (
+    a = iota
+    b // infers pattern of assignment in block and makes this iota automatically
+    c // infers pattern of assignment in block and makes this iota automatically
+ ) // a counter used for enumerated constants
+
+const (
+    ab = iota
+)
+func main() {
+    fmt.Printf("%v", a) // prints 0
+    fmt.Printf("%v", b) // prints 1
+    fmt.Printf("%v", c) // prints 2
+    fmt.Printf("%v", ab) // prints  0 - iota limited to constant block
+}
+```
+
 ### Enumeration Expressions
+
+Operations that can be determined at compile time are allowed: Arithmetic, Bitwise and Bitshifting
+
