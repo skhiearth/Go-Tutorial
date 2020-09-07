@@ -1321,3 +1321,118 @@ func main() {
 ```
 
 ## Functions
+
+### Basic Syntax
+
+`func` keyword followed by name
+Uppercase and lowercase define the visibility of the fuunction, like all other things in Go.
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() { // Function
+    fmt.Println("Hello, world!")
+}
+```
+
+### Parameters
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() { // Function
+    sayMessage("Hello, World!")
+}
+
+func sayMessage(msg string){ // Params
+    fmt.Println(msg)
+}
+```
+
+### Return values
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() { // Function
+    fmt.Println(sayMessage("Hello, World!"))
+}
+
+func sayMessage(msg string) string{ 
+    return msg // Return
+}
+```
+
+### Anonymous functions
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() { // Function
+    func(){
+        fmt.Println("Hello Go!")
+    }()
+}
+```
+
+### Functions as types
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() { 
+    f := func(){
+        fmt.Println("Hello Go!")
+    }()
+    f()
+}
+```
+
+### Methods
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() { 
+    g := greeter{
+        greeting: "Hello",
+        name: "Go"
+    }
+    g.greet() // Calling methods
+}
+
+type greeter struct {
+    greeting string
+    name string
+}
+
+func (g greeter) greet() { // Method -> Function executed in known context
+    fmt.Println(g.greeting, g.name)
+}
+```
+
+## Interfaces
