@@ -17,7 +17,7 @@ Go was created by a small team within Google comprising of Robert Griesemar, Rob
 
 3. play.golang.org
 
-`
+```go
 package main
 
 import (
@@ -27,4 +27,4 @@ import (
 func main() {
     fmt.Println("Hello, world!")
 }
-`
+```
