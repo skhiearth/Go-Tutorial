@@ -38,6 +38,9 @@ func main() { // main function - entry point
 
 Download GoLand from JetBrains
 
+Add to `.bash_profile`:
+`export PATH=$PATH:$(go env GOPATH)/bin`
+
 ## Variables
 
 ```go
